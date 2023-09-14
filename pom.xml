@@ -31,26 +31,17 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-freemarker -->
-
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.12</version>
+            <version>8.0.32</version>
         </dependency>
 
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.flywaydb.enterprise/flyway-core -->
-        <dependency>
-            <groupId>org.flywaydb.enterprise</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>9.0.0</version>
+            <artifactId>flyway-mysql</artifactId>
+            <version>9.22.1</version>
         </dependency>
 
 
@@ -85,5 +76,6 @@
         </dependency>
 
     </dependencies>
+
 
 </project>
