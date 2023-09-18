@@ -1,33 +1,30 @@
 package com.example.switter.controller;
-
 import com.example.switter.domain.Role;
 import com.example.switter.domain.User;
-import com.example.switter.repos.UserRepo;
+import com.example.switter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
-    @Autowired
-    UserRepo userRepo;
 
+    @Autowired
+    UserService service;
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public String userList(Model model) {
-        model.addAttribute("users", userRepo.findAll());
+        model.addAttribute("users", service.findAll());
         return "userlist";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("{user}")
     public String roleEdit(@PathVariable User user, Model model) {
         model.addAttribute("user", user);
@@ -35,26 +32,14 @@ public class UserController {
         return "userEdit";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public String userSave(
             @RequestParam String username,
             @RequestParam Map<String, String> form,
             @RequestParam("id") User user) {
-        user.setName(username);
 
-        Set<String> roles = Arrays.stream(Role.values())
-                .map(Role::name)
-                .collect(Collectors
-                        .toSet());
-
-        user.getRole().clear();
-
-        for (String role : form.keySet()) {
-            if (roles.contains(role)) {
-                user.getRole().add(Role.valueOf(role));
-            }
-        }
-        userRepo.save(user);
+        service.userSaver(username, user, form);
 
         return "redirect:/user";
     }

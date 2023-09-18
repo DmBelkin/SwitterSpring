@@ -1,5 +1,4 @@
 package com.example.switter.config;
-
 import com.example.switter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +7,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -20,8 +21,9 @@ public class WebSecurityConfig {
     @Autowired
     UserService userService;
 
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
@@ -39,9 +41,14 @@ public class WebSecurityConfig {
 
 
     @Autowired
-    public void configure (AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure (AuthenticationManagerBuilder auth) throws Exception {
           auth.userDetailsService(userService).
           passwordEncoder(NoOpPasswordEncoder.getInstance());
+    }
+
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder(8);
     }
 
 }

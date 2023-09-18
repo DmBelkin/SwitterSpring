@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -21,6 +22,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     MailSender sender;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -35,7 +39,10 @@ public class UserService implements UserDetailsService {
       user.setActive(true);
       user.setRole(Collections.singleton(Role.USER));
       userRepo.save(user);
+      String password = encoder.encode(user.getPassword());
       user.setActivationCode(UUID.randomUUID().toString());
+      user.setPassword(password);
+
 
       if (!StringUtils.isNullOrEmpty(user.getEmail())) {
           String message = String.format(
@@ -56,5 +63,27 @@ public class UserService implements UserDetailsService {
         user.setActivationCode(null);
         userRepo.save(user);
         return true;
+    }
+
+    public List<User> findAll() {
+        return userRepo.findAll();
+    }
+
+    public void userSaver(String userName, User user, Map<String, String> form) {
+        user.setName(userName);
+
+        Set<String> roles = Arrays.stream(Role.values())
+                .map(Role::name)
+                .collect(Collectors
+                        .toSet());
+
+        user.getRole().clear();
+
+        for (String role : form.keySet()) {
+            if (roles.contains(role)) {
+                user.getRole().add(Role.valueOf(role));
+            }
+        }
+        userRepo.save(user);
     }
 }

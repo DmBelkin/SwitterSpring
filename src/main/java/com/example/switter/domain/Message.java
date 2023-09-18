@@ -1,6 +1,6 @@
 package com.example.switter.domain;
-
 import jakarta.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Message {
@@ -10,6 +10,8 @@ public class Message {
     private Long id;
     @Column(name = "tag")
     private String tag;
+
+    @NotBlank(message = "please, fill the message")
     @Column(name = "text")
     private String text;
 
