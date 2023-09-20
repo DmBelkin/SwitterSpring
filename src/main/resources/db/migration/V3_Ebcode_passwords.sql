@@ -1,6 +1,1 @@
-
-
-SELECT AES_ENCRYPT('password', CONCAT('asf', 8)))
-
-
-
+UPDATE user SET password = SHA1(password)

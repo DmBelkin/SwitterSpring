@@ -15,7 +15,6 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank(message = "username can't be empty")
-
     private String username;
 
     @NotBlank(message = "password can't be empty")
@@ -111,6 +110,7 @@ public class User implements UserDetails {
         return getRole();
     }
 
+    @Override
     public String getPassword() {
         return password;
     }

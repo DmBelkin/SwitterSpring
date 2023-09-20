@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -21,17 +20,28 @@ public class WebSecurityConfig {
     @Autowired
     UserService userService;
 
+    @Autowired
+    PasswordEncoder encoder;
+
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder(8);
+    }
+
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().
+                        authenticated().
+                        and()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        .permitAll()
+                        .permitAll().
+                        and()
                 )
                 .logout((logout) -> logout.permitAll());
 
@@ -43,12 +53,6 @@ public class WebSecurityConfig {
     @Autowired
     protected void configure (AuthenticationManagerBuilder auth) throws Exception {
           auth.userDetailsService(userService).
-          passwordEncoder(NoOpPasswordEncoder.getInstance());
+          passwordEncoder(encoder);
     }
-
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder(8);
-    }
-
 }

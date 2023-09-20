@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
 
     @Autowired
-    UserRepo userRepo;
+    private UserRepo userRepo;
 
     @Autowired
-    MailSender sender;
+    private MailSender sender;
 
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -32,16 +32,15 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean addUser (User user) {
-      User userFormOb = userRepo.findByUsername(user.getUsername());
+      User userFormOb = userRepo.findByUsername(user.getName());
       if (userFormOb != null) {
           return false;
       }
       user.setActive(true);
       user.setRole(Collections.singleton(Role.USER));
-      userRepo.save(user);
-      String password = encoder.encode(user.getPassword());
       user.setActivationCode(UUID.randomUUID().toString());
-      user.setPassword(password);
+      user.setPassword(encoder.encode(user.getPassword()));
+      userRepo.save(user);
 
 
       if (!StringUtils.isNullOrEmpty(user.getEmail())) {

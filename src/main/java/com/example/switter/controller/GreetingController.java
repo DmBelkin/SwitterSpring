@@ -1,5 +1,4 @@
 package com.example.switter.controller;
-
 import com.example.switter.domain.Message;
 import com.example.switter.domain.User;
 import com.example.switter.repos.MessageRepo;
