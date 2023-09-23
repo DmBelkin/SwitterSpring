@@ -21,6 +21,12 @@
                 </li>
                 </#if>
             </ul>
+            <#if isAuthorized>
+            <form action="/logout" method="post">
+                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                <button class="btn btn-primary" type="submit">Sign Out</button>
+            </form>
+            </#if>
             <div class="navbar-text">${username}</div>
         </div>
     </div>

@@ -7,13 +7,13 @@ ${message!}
     <div class="form-group row">
         <label class="col-sm-2 col-form label"> User Name :</label>
         <div class="col-sm-6">
-            <input type="text" name="name" class="form-control" />
+            <input type="text" name="name" class="form-control" placeholder="name"/>
         </div>
     </div>
     <div class="form-group row">
         <label class="col-sm-2 col-form label"> Password :</label>
         <div class="col-sm-6">
-            <input type="password" name="password" class="form-control" />
+            <input type="password" name="password" class="form-control" placeholder="password"/>
         </div>
     </div>
     <div class="form-group row">

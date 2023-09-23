@@ -1,44 +1,63 @@
 <#import "parts/common.ftlh" as c>
-<#import "parts/login.ftlh" as l>
 
 <@c.page>
 <div class="form-row">
-    <form action="/logout" method="post">
-        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        <input type="submit" value="Sign out"/>
-    </form>
-    <form method="get" action="/main" class="form-inline">
-        <input type="text" name="filter" class="form-control" value="${filter!}" placeholder="Search by tag"/>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+    <div class="form-group col-md-6">
+        <form method="get" action="/main" class="form-inline">
+            <input type="text" name="filter" class="form-control" value="${filter?ifExists}"
+                   placeholder="Search by tag">
+            <button type="submit" class="btn btn-primary ml-2">Search</button>
+        </form>
+    </div>
 </div>
-<div>
-    <form method="post" enctype="multipart/form-data">
-        <input type="text" class="form-control ${(textError??)?string('is-invalid', '')}" name="text"
-               value= "<#if message??>${message.text}</#if>" placeholder="Введите сообщение"/>
-        <#if textError??>
-        <div class="invalid feedback">
-            ${textError}
+    <div class="form-group col-md-6">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="text" class="form-control ${(textError??)?string('is-invalid', '')}"
+                       value="<#if message??>${message.text}</#if>" name="text" placeholder="Введите сообщение" />
+                <#if textError??>
+                <div class="invalid-feedback">
+                    ${textError}
+                </div>
+                </#if>
+            </div>
+    <div class="form-group col-ml-2">
+        <input type="text" class="form-control ${(tagError??)?string('is-invalid', '')}"
+               value="<#if message??>${message.tag}</#if>" name="tag" placeholder="Тэг">
+        <#if tagError??>
+        <div class="invalid-feedback">
+            ${tagError}
         </div>
-    </#if>
-    <input type="text" name="tag" placeholder="тэг">
-    <input type="file" name="file">
-    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-    <button type="submit">Добавить</button>
-    </form>
+        </#if>
+    </div>
+<div class="form-group">
+    <div class="custom-file">
+        <input type="file" name="file" id="customFile">
+        <label class="custom-file-label" for="customFile">Choose file</label>
+    </div>
 </div>
-<#list messages as message>
-<div>
-    <b>${message.id}</b>
-    <span>${message.text}</span>
-    <i>${message.tag}</i>
-    <strong>${message.authorName}</strong>
-    <div>
+<input type="hidden" name="_csrf" value="${_csrf.token}"/>
+<div class="form-group">
+    <button type="submit" class="btn btn-primary ml-2">Добавить</button>
+</div>
+</form>
+</div>
+<div class="card-columns">
+    <#list messages as message>
+    <div class="card my-2">
         <#if message.filename??>
-        <img src="/img/${message.filename}">
-    </#if>
+        <img src="/img/${message.filename}" class="card-img-top">
+        </#if>
+    <div class="m-1">
+        <span>${message.text}</span>
+        <i>${message.tag}</i>
+    </div>
+    <div class="card-footer text-muted">
+        ${message.authorName}
+    </div>
 </div>
 <#else>
-No messages
+No message
 </#list>
+</div>
 </@c.page>

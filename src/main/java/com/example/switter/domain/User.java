@@ -1,9 +1,9 @@
 package com.example.switter.domain;
 import jakarta.persistence.*;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Set;
 
@@ -19,10 +19,6 @@ public class User implements UserDetails {
 
     @NotBlank(message = "password can't be empty")
     private String password;
-
-    @Transient
-    @NotBlank(message = "password confirmation can't be empty")
-    private String password2;
 
     private boolean active;
 
@@ -59,7 +55,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public boolean getActive() {
+    public boolean isActive() {
         return active;
     }
 
@@ -95,13 +91,6 @@ public class User implements UserDetails {
         this.activationCode = activationCode;
     }
 
-    public String getPassword2() {
-        return password2;
-    }
-
-    public void setPassword2(String password2) {
-        this.password2 = password2;
-    }
 
     //security
 

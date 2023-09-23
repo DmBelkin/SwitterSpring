@@ -1,6 +1,7 @@
 package com.example.switter.domain;
 import jakarta.persistence.*;
-import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 public class Message {
@@ -8,10 +9,14 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank(message = "please, fill the tag")
+    @Length(max = 20, message = "Tag too long")
     @Column(name = "tag")
     private String tag;
 
     @NotBlank(message = "please, fill the message")
+    @Length(max = 2048, message = "Message too long")
     @Column(name = "text")
     private String text;
 
