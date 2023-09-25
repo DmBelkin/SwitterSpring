@@ -69,6 +69,7 @@ public class GreetingController {
                     message.setFilename(resultFileName);
                 }
             }
+            model.addAttribute("message", null);
             repo.save(message);
         }
         Iterable<Message> messages = repo.findAll();
